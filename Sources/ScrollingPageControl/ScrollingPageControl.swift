@@ -8,9 +8,9 @@
 import UIKit
 
 public protocol ScrollingPageControlDelegate: class {
-	//	If delegate is nil or the implementation returns nil for a given dot, the default
-	//	circle will be used. Returned views should react to having their tint color changed
-	func viewForDot(at index: Int) -> UIView?
+    //    If delegate is nil or the implementation returns nil for a given dot, the default
+    //    circle will be used. Returned views should react to having their tint color changed
+    func viewForDot(at index: Int) -> UIView?
 }
 
 open class ScrollingPageControl: UIView {
@@ -89,8 +89,7 @@ open class ScrollingPageControl: UIView {
     
     // Current screen orientation
     private var isLandscape: Bool {
-        return UIDevice.current.orientation.isValidInterfaceOrientation ?
-            UIDevice.current.orientation.isLandscape : UIApplication.shared.statusBarOrientation.isLandscape
+        return UIWindow.currentNavigationController?.preferredInterfaceOrientationForPresentation != .portrait
     }
     
     //    The color of all the unselected dots
@@ -150,7 +149,7 @@ open class ScrollingPageControl: UIView {
             
             dotViews.enumerated().forEach { page, dot in
                 let center = CGPoint(x: bounds.midX,
-                                     y: verticalOffset + bounds.minY + dotSize / 2 + (dotSize * CGFloat(page) + spacing * CGFloat(page - 1)))
+                                     y: verticalOffset + bounds.minY + dotSize / 2 + (dotSize * CGFloat(page) + spacing * CGFloat(page)))
                 let scale: CGFloat = {
                     let distance = abs(page - centerPage)
                     if distance > (maxDots / 2) { return 0 }
@@ -165,7 +164,7 @@ open class ScrollingPageControl: UIView {
             let centerPage = centerDots / 2 + pageOffset
             
             dotViews.enumerated().forEach { page, dot in
-                let center = CGPoint(x: horizontalOffset + bounds.minX + dotSize / 2 + (dotSize * CGFloat(page) + spacing * CGFloat(page )),
+                let center = CGPoint(x: horizontalOffset + bounds.minX + dotSize / 2 + (dotSize * CGFloat(page) + spacing * CGFloat(page)),
                                      y: bounds.midY)
                 let scale: CGFloat = {
                     let distance = abs(page - centerPage)
