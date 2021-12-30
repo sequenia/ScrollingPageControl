@@ -142,14 +142,18 @@ open class ScrollingPageControl: UIView {
     }
     
     private func updatePositions() {
+        let sidePages = (maxDots - centerDots) / 2
+        let centerPage = centerDots / 2 + pageOffset
+        let offsetForEven = dotViews.count % 2 == 0
+            ? (dotSize + spacing) / 2
+            : .zero
+
         if isLandscape {
-            let sidePages = (maxDots - centerDots) / 2
             let verticalOffset = CGFloat(-pageOffset + sidePages) * (dotSize + spacing) + (bounds.height - intrinsicContentSize.height) / 2
-            let centerPage = centerDots / 2 + pageOffset
             
             dotViews.enumerated().forEach { page, dot in
                 let center = CGPoint(x: bounds.midX,
-                                     y: verticalOffset + bounds.minY + dotSize / 2 + (dotSize * CGFloat(page) + spacing * CGFloat(page)))
+                                     y: verticalOffset + bounds.minY + dotSize / 2 + dotSize * CGFloat(page) + spacing * CGFloat(page) - offsetForEven)
                 let scale: CGFloat = {
                     let distance = abs(page - centerPage)
                     if distance > (maxDots / 2) { return 0 }
@@ -159,12 +163,10 @@ open class ScrollingPageControl: UIView {
                 dot.center = center
             }
         } else {
-            let sidePages = (maxDots - centerDots) / 2
             let horizontalOffset = CGFloat(-pageOffset + sidePages) * (dotSize + spacing) + (bounds.width - intrinsicContentSize.width) / 2
-            let centerPage = centerDots / 2 + pageOffset
             
             dotViews.enumerated().forEach { page, dot in
-                let center = CGPoint(x: horizontalOffset + bounds.minX + dotSize / 2 + (dotSize * CGFloat(page) + spacing * CGFloat(page)),
+                let center = CGPoint(x: horizontalOffset + bounds.minX  + dotSize / 2 + (dotSize * CGFloat(page) + spacing * CGFloat(page) - offsetForEven),
                                      y: bounds.midY)
                 let scale: CGFloat = {
                     let distance = abs(page - centerPage)
